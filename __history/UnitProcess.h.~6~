@@ -1,0 +1,34 @@
+//---------------------------------------------------------------------------
+
+#ifndef UnitProcessH
+#define UnitProcessH
+#include <vcl.h>
+//---------------------------------------------------------------------------
+#include "uSplitView.h"
+//---------------------------------------------------------------------------
+class PInf:TObject
+ {
+ public:
+  String Name,
+		 User,
+		 FullPatch,
+		 Module;
+  DWORD PID,
+		Usage,
+		Threads,
+		PriClassBase,
+		Version,
+		Priority;
+  HANDLE H;
+  bool Suspended;
+  WORD V1,V2;
+  int ColP;
+
+  void RabotaiSyka ();
+  void GetProcessList();
+  void SetProcessList();
+ };
+
+
+//---------------------------------------------------------------------------
+#endif

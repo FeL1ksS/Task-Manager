@@ -1,0 +1,133 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+#include "UnitProcess.h"
+#include "uSplitView.h"
+#include <tlhelp32.h>
+#include <windows.h>
+#include <psapi.h>
+#include <stdlib.h>
+//---------------------------------------------------------------------------
+
+#pragma package(smart_init)
+
+//---------------------------------------------------------------------------
+int PS(int a,int b)
+{
+	return (a+b);
+}
+
+  void GetProcessList()
+  {
+
+	  //ListView1->Clear();
+	HANDLE InfoProcess=0;
+	HANDLE hToken=0;
+	DWORD PID;
+    bool EnumProcess;
+    bool EnumThread;
+   //	bool EnumModule;
+	wchar_t pathP[500];
+    TOKEN_USER* pUserInfo;
+    char name[256];
+    char domain[256];
+    char *result;
+    DWORD dwSize = 256;
+	int iUse;
+	int ColP=0;
+
+//Сником процессов
+    HANDLE ProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+//Снимок модулей
+    HANDLE ModuleSnap  = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,  0);
+//Снимок потоков
+//структура для вывода
+    PROCESSENTRY32 Process;
+    MODULEENTRY32  Module;
+//установим ее размер, это необходимое действие
+    Process.dwSize = sizeof(PROCESSENTRY32);
+    Module.dwSize  = sizeof(MODULEENTRY32);
+//Определение первого элемента
+    EnumProcess = Process32First (ProcessSnap, &Process);
+	//EnumModule  = Module32First  (ModuleSnap,  &Module);
+
+	while (EnumProcess)
+  {
+
+		PID=Process.th32ProcessID;
+		AnsiString Fontdr=Process.szExeFile;
+
+		if((PID==4)||(PID==0)||(Fontdr=="fontdrvhost.exe"))
+        {
+		 EnumProcess = Process32Next(ProcessSnap, &Process);
+        }
+        else
+		{
+		//ListView1->Items->Add();
+		//Item = ListView1->Items->Item[ListView1->Items->Count-1];
+//-------------------------------Сбор информации о процессах---------------------------------------
+
+        InfoProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
+		Process.th32ProcessID);
+    if (!(OpenProcessToken(InfoProcess, TOKEN_QUERY, &hToken)))
+    {
+		SplitViewForm->ListBox3->Items->Add("OpenToken " + SysErrorMessage(GetLastError()));
+	}
+
+	pUserInfo = (PTOKEN_USER) GlobalAlloc(GPTR, dwSize);
+    if (!(GetTokenInformation(hToken, TokenUser, pUserInfo, dwSize, &dwSize)))
+	{
+		SplitViewForm->ListBox3->Items->Add("GetTokenInfo " + AnsiString(GetLastError()));
+	}
+
+	// Ошибка получения имени пользователя
+    if (!(LookupAccountSidA(0, pUserInfo->User.Sid, name, &dwSize, domain,
+        &dwSize, (PSID_NAME_USE) & iUse)))
+	{
+		SplitViewForm->ListBox3->Items->Add("Lookup " + SysErrorMessage(GetLastError()));
+	}
+
+		//Item->Caption=PID;// Ид процесса
+		//Item->ImageIndex=0;//картинка
+		//Item->SubItems->Add(Process.szExeFile); // Имя процесса
+
+	   /*	switch (GetPriorityClass(InfoProcess))
+			{
+			  case 256: Item->SubItems->Add("Реальный"); break;
+			  case 128:  Item->SubItems->Add("Высокий"); break;
+			  case  32:  Item->SubItems->Add("Нормальный"); break;
+			  case  64:  Item->SubItems->Add("Низкий");  break;
+			  case  32768:  Item->SubItems->Add("Нормальный+"); break;
+			  case  16384:  Item->SubItems->Add("Низкий+");  break;
+			}
+		 */
+		//Item->SubItems->Add(name);//локальная группа процесса
+	  //	Item->SubItems->Add(Module.szModule); //Модуль процесса
+	 //	Item->SubItems->Add(Process.cntThreads); //кол-во потоков
+
+		GetModuleFileNameEx(InfoProcess, NULL, pathP, MAX_PATH ); //путь процесса записывается в pBuf
+			 //Item->SubItems->Add(pathP);
+			//Item->SubItems->Add("Недоступно");
+
+	   PInf *Inf = new PInf;
+	   Inf->PID =Process.th32ProcessID;
+	   Inf->Name=Process.szExeFile;
+	   Inf->User=name;
+	   Inf->Module=Module.szModule;
+	   Inf->FullPatch=pathP;
+	   Inf->Threads=Process.cntThreads;
+	   Inf->ColP=ColP++;
+	   Inf->Priority=GetPriorityClass(InfoProcess);
+
+
+
+	   //SplitViewForm->Item->Caption=Inf->Name;
+		EnumProcess = Process32Next(ProcessSnap, &Process);
+       // EnumModule  = Module32Next (ModuleSnap,  &Module);
+
+		//Label1->Caption=IntToStr(ColP++);
+	  }
+  }
+	CloseHandle(ProcessSnap);
+	CloseHandle(ModuleSnap);
+  }

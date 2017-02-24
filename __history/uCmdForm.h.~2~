@@ -1,0 +1,25 @@
+//---------------------------------------------------------------------------
+
+#ifndef uCmdFormH
+#define uCmdFormH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TcmdForm : public TForm
+{
+__published:	// IDE-managed Components
+	TMemo *MemoOutput;
+	TMemo *MemoInput;
+	void __fastcall MemoOutputKeyPress(TObject *Sender, System::WideChar &Key);
+private:	// User declarations
+	void Dos2MemoF(const AnsiString &sCommandLine);
+public:		// User declarations
+	__fastcall TcmdForm(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TcmdForm *cmdForm;
+//---------------------------------------------------------------------------
+#endif

@@ -1,0 +1,18 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+#include "UnitProcess.h"
+#include "uSplitView.h"
+#include <tlhelp32.h>
+#include <windows.h>
+#include <psapi.h>
+#include <stdlib.h>
+//---------------------------------------------------------------------------
+
+#pragma package(smart_init)
+//---------------------------------------------------------------------------
+int PS(int a,int b)
+{
+	return (a+b);
+}
+

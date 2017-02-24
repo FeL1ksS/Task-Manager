@@ -1,0 +1,220 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+#include <memory>
+#include <string>
+#include <iostream>
+#include <istream>
+#include <fstream>
+// vcl
+#include <IOUtils.hpp>
+#include <StrUtils.hpp>
+#include "uCmdForm.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TcmdForm *cmdForm;
+//---------------------------------------------------------------------------
+__fastcall TcmdForm::TcmdForm(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void AddOemLine(TStrings *AStrings, ifstream & /* out */ ifile)
+{
+	std::string sLine;
+	sLine="";
+	std::getline(ifile, sLine);
+	char *chBuff = new char[sLine.size() + 1];
+	OemToAnsi(sLine.c_str(), chBuff);
+	AStrings->Add(chBuff);
+	delete[]chBuff;
+}
+//---------------------------------------------------------------------------
+void CMD2Memo(TStrings *AStrings, const AnsiString &sCommandLine)
+{
+	// корневая директория программы
+	const AnsiString sRootDir = ExtractFilePath(Application->ExeName);
+	// временные файлы, куда будем перенаправлять консоль
+	const AnsiString sTempFileName = sRootDir + "temp_file_name~.cmd";
+	const AnsiString sOutputFile = sRootDir + "stdout~.txt";
+	// командную строку записываем в батник
+	TFile::WriteAllText(sTempFileName, sCommandLine);
+
+	// переменная которая будет показывать, что батник ещё исполняется
+	DWORD dwAppRunning = 0;
+
+	SECURITY_ATTRIBUTES sa;
+	sa.nLength = sizeof(sa);
+	sa.bInheritHandle = TRUE;
+	sa.lpSecurityDescriptor = NULL;
+
+	// создаём файл, куда будет перенаправляться вывод из консоли
+	HANDLE hFile = CreateFileA(sOutputFile.c_str(), GENERIC_WRITE | GENERIC_READ,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, CREATE_ALWAYS, 0, NULL);
+
+	SetFilePointer(hFile, 0, NULL, FILE_END);
+
+	STARTUPINFOA si = {
+		sizeof(STARTUPINFOA)
+	};
+
+	si.hStdOutput = hFile;
+	si.hStdError = hFile;
+	si.dwFlags = STARTF_USESTDHANDLES;
+	si.wShowWindow = SW_HIDE;
+
+	PROCESS_INFORMATION pi;
+
+	// открываем созданный файл для чтения
+	std::ifstream ifile(sOutputFile.c_str());
+	if (!ifile.is_open())
+	{
+		return;
+	}
+
+	// запускаем батник
+	bool bSuccess = CreateProcessA(NULL, sTempFileName.c_str(), NULL, NULL, TRUE, 0, 0, 0, &si,
+		&pi);
+	if (bSuccess) {
+		do {
+			// проверяем, выполняется ли ещё процесс
+			dwAppRunning = WaitForSingleObject(pi.hProcess, 100);
+
+			// качаем порцию информации из файла
+			if (ifile.good()) {
+				AddOemLine(AStrings, ifile);
+			}
+
+			// даём возможность приложению обработать команду
+			Sleep(5);
+			Application->ProcessMessages();
+
+		}
+		while (dwAppRunning == WAIT_TIMEOUT);
+	}
+
+	// после того, как процесс завершён, окончательно допишем остатки информации из файла
+	while (ifile.good()) {
+		AddOemLine(AStrings, ifile);
+	}
+	ifile.close();
+	CloseHandle(hFile);
+
+	// добавляем текущую директорию
+	AStrings->Add(GetCurrentDir() + ">");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TcmdForm::MemoInputKeyPress(TObject *Sender, System::WideChar &Key)
+{
+		if (Key == '\n') {
+
+		MemoOutput->Lines->Add("===========================================");
+		MemoOutput->Lines->Add(MemoInput->Lines->Text);
+		MemoOutput->Lines->Add("===========================================");
+
+		/* Так как команда CD не влияет на текущую директорию нашего процесса,
+		то необходима продублировать выполнение смены директории самостоятельно */
+		for (int i = 0; i < MemoInput->Lines->Count; i++) {
+			std::auto_ptr<TStringList>AStringList(new TStringList());
+			AStringList->StrictDelimiter = true;
+			AStringList->Delimiter = ' ';
+			AStringList->DelimitedText = MemoInput->Lines->Strings[i];
+
+			if (AStringList->Count >= 2) {
+				const UnicodeString sCommand = AStringList->Strings[0].UpperCase();
+				if (sCommand == "CD" || sCommand == "CHDIR") {
+					const UnicodeString sChangeDir = AStringList->Strings[1].UpperCase();
+					if (sChangeDir == "/D") {
+						AStringList->Delete(1);
+					}
+					AStringList->Delete(0);
+
+					SetCurrentDir(AStringList->DelimitedText);
+				}
+			}
+		}
+
+		// выполняем командную строку
+		CMD2Memo(MemoOutput->Lines, MemoInput->Lines->Text);
+
+		// чистим поле для ввода
+		MemoInput->Lines->Clear();
+		Key = NULL;
+
+	}
+}
+//---------------------------------------------------------------------------
+
+
+
+
+void __fastcall TcmdForm::Button1Click(TObject *Sender)
+{
+	Memo1->Text=MemoOutput->SelText;
+	if(MemoOutput->SelText!="")
+	{
+		if(SaveDialog1->Execute())
+		{
+			UnicodeString fname = SaveDialog1->FileName;
+			Memo1->Lines->SaveToFile(fname);
+		}
+	}
+	else
+	{
+		if(SaveDialog1->Execute())
+		{
+			UnicodeString fname = SaveDialog1->FileName;
+			MemoOutput->Lines->SaveToFile(fname);
+		}
+	}
+
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TcmdForm::Button2Click(TObject *Sender)
+{
+	Memo1->Clear();
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TcmdForm::Image1Click(TObject *Sender)
+{
+	MemoOutput->Clear();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TcmdForm::ImMenuDownMouseEnter(TObject *Sender)
+{
+	  ImMenuDown->Top+=5;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TcmdForm::ImMenuDownClick(TObject *Sender)
+{
+	if (cmdForm->Height<520)
+	{
+		cmdForm->Height=520;
+		ImMenuDown->Picture->LoadFromFile("DragListUP.png");
+	}
+	else
+	{
+		cmdForm->Height=437;
+		ImMenuDown->Picture->LoadFromFile("DragListDown.png");
+	}
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TcmdForm::ImMenuDownMouseLeave(TObject *Sender)
+{
+	ImMenuDown->Top-=5;
+}
+//---------------------------------------------------------------------------
+

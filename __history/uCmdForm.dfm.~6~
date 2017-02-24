@@ -1,0 +1,113 @@
+object cmdForm: TcmdForm
+  Left = 0
+  Top = 0
+  VertScrollBar.Color = clHighlight
+  VertScrollBar.ParentColor = False
+  VertScrollBar.Style = ssFlat
+  VertScrollBar.Tracking = True
+  Caption = 'cmdForm'
+  ClientHeight = 478
+  ClientWidth = 591
+  Color = 13334299
+  TransparentColorValue = clWhite
+  DoubleBuffered = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  Scaled = False
+  Visible = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Image1: TImage
+    Left = 545
+    Top = 321
+    Width = 30
+    Height = 30
+    Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+    AutoSize = True
+    Center = True
+    ParentShowHint = False
+    Picture.Data = {
+      0954506E67496D61676589504E470D0A1A0A0000000D494844520000001E0000
+      001E08060000003B30AEA2000001764944415478DAED97FF51833014C793095A
+      27689DA0ED04E206DDC06C60371036E806C6096C27103780094C37A813E0F70B
+      8FBBC8012AE552FFE0DD7D0FC88FF7491EE12568255614C51C9727680B2DD5B8
+      E6A0039468ADCF2CD0025DE3F206CD4706368DD07BC0332D33FD0800F5E1B704
+      EF71F318085A5B42B0C3CD2230D8115C048696368127F055C12755A5BBB33CEF
+      A00C4A5595627DFB84ACB4654232D06C08F8289DE964E10DE280B417B7F4DDA8
+      2A2FAFA05C06D89A23FAC01CFD12621E7F55DF536AD202CE51B6461167FC7049
+      A8DFE1284235437AD7A84B3A667C2357EE70B1EAC9887DE01738377F0433B431
+      EA8EB2F90C0A7506071B5473E4CD45D4056EF6ED0CFB4F8B8B7B678A264655EF
+      DB41CF1E38F6DA1A096F04A5A8B7A8E78C5743C0FC2CB86D32DCB938B1F26C1B
+      6DD96E27EDB820B9D56EBB1CFFEB04328127F060B053E10F7BA7AB1E6F995339
+      EBD985CE7E6BE5AEE7FFC2A401E08446E52F4C5D223367CA336AFC77CE038485
+      F6F54FDB17F569E89C20AA2A6E0000000049454E44AE426082}
+    ShowHint = True
+    OnClick = Image1Click
+  end
+  object Image2: TImage
+    Left = 280
+    Top = 354
+    Width = 30
+    Height = 30
+    AutoSize = True
+    Center = True
+    Picture.Data = {
+      0954506E67496D61676589504E470D0A1A0A0000000D494844520000001E0000
+      001E08060000003B30AEA20000007F4944415478DA63641820C0386AF1A8C5A3
+      1653CDE2FF4030E22C6E18108B07C2D281B51818D40E409AEEF13C3253B5C380
+      583C10960EACC5D002643455D3DEE281B074D462BC0098140480540103FE1C30
+      919191F103D57D0CB43C0148CDC7219D08B47401D57D4CC072922C25CB622C96
+      936C29D9162359CE408EA5200000511E4079B26F21D80000000049454E44AE42
+      6082}
+  end
+  object Button1: TButton
+    Left = 248
+    Top = 445
+    Width = 105
+    Height = 25
+    Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 452
+    Width = 81
+    Height = 18
+    TabOrder = 1
+    Visible = False
+  end
+  object MemoOutput: TMemo
+    Left = 0
+    Top = 0
+    Width = 591
+    Height = 297
+    Align = alTop
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 2
+    ExplicitLeft = 8
+    ExplicitTop = 16
+    ExplicitWidth = 571
+  end
+  object MemoInput: TMemo
+    Left = 56
+    Top = 323
+    Width = 473
+    Height = 25
+    Alignment = taCenter
+    TabOrder = 3
+    OnKeyPress = MemoInputKeyPress
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.txt'
+    Filter = #1058#1077#1082#1089#1090#1086#1074#1099#1081' '#1092#1072#1081#1083'|.txt'
+    Left = 544
+    Top = 360
+  end
+end

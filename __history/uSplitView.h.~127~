@@ -1,0 +1,283 @@
+//---------------------------------------------------------------------------
+
+// This software is Copyright (c) 2015 Embarcadero Technologies, Inc.
+// You may only use this software if you are an authorized licensee
+// of an Embarcadero developer tools product.
+// This software is considered a Redistributable as defined under
+// the software license agreement that comes with the Embarcadero Products
+// and is subject to that software license agreement.
+
+//---------------------------------------------------------------------------
+
+#ifndef uSplitViewH
+#define uSplitViewH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include "Vcl.WinXCtrls.hpp"
+#include <System.Actions.hpp>
+#include <System.ImageList.hpp>
+#include <Vcl.ActnList.hpp>
+#include <Vcl.CategoryButtons.hpp>
+#include <Vcl.ComCtrls.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <Vcl.Imaging.pngimage.hpp>
+#include <Vcl.ImgList.hpp>
+#include <Data.Bind.Components.hpp>
+#include <Data.Bind.EngExt.hpp>
+#include <System.Bindings.Outputs.hpp>
+#include <System.Rtti.hpp>
+#include <Vcl.Bind.DBEngExt.hpp>
+#include <Vcl.Bind.Editors.hpp>
+#include <Data.Bind.GenData.hpp>
+#include <Data.Bind.ObjectScope.hpp>
+#include <Data.Bind.Controls.hpp>
+#include <Vcl.Bind.Navigator.hpp>
+#include <Vcl.Buttons.hpp>
+#include "UnitProcess.h"
+#include <Vcl.Menus.hpp>
+#include <System.Notification.hpp>
+#include <Vcl.XPMan.hpp>
+#include "perfgrap.h"
+#include <Vcl.ActnCtrls.hpp>
+#include <Vcl.ActnMan.hpp>
+#include <Vcl.ExtActns.hpp>
+#include <Vcl.PlatformDefaultStyleActnCtrls.hpp>
+#include <Vcl.ToolWin.hpp>
+#include "cgauges.h"
+#include <IdBaseComponent.hpp>
+#include <IdComponent.hpp>
+#include <IdIPWatch.hpp>
+#include <IdTCPClient.hpp>
+#include <IdTCPConnection.hpp>
+#include <IdHTTP.hpp>
+#include <IdAuthentication.hpp>
+#include <Vcl.Imaging.jpeg.hpp>
+int PS(int ,int);
+//---------------------------------------------------------------------------
+class TInnerWorld : public TForm
+{
+__published:	// IDE-managed Components
+    TPanel *pnlToolbar;
+    TImage *imgMenu;
+    TLabel *lblTitle;
+    TSplitView *SV;
+    TCategoryButtons *catMenuItems;
+	TImageList *imlIcons;
+    TActionList *ActionList1;
+    TAction *actHome;
+	TAction *actProcess;
+	TAction *actAuto;
+	TAction *actReg;
+	TAction *actSettings;
+	TPageControl *PageControl1;
+	TTabSheet *Tab1Menu;
+	TTabSheet *Tab2Process;
+	TTabSheet *Tab3Auto;
+	TTabSheet *Tab5Settings;
+	TComboBox *cbxVclStyles;
+	TCheckBox *chkCloseOnMenuClick;
+	TGroupBox *grpAnimation;
+	TLabel *lblAnimationDelay;
+	TLabel *lblAnimationStep;
+	TCheckBox *chkUseAnimation;
+	TTrackBar *trkAnimationDelay;
+	TTrackBar *trkAnimationStep;
+	TRadioGroup *grpCloseStyle;
+	TRadioGroup *grpDisplayMode;
+	TRadioGroup *grpPlacement;
+	TLabel *lblVclStyle;
+	TStatusBar *StatusBar1;
+	TListView *ListView1;
+	TImage *imgHelp;
+	TListBox *ListBox3;
+	TListBox *ListBox1;
+	TLabel *Label1;
+	TPopupMenu *PopupMenu1;
+	TMenuItem *N1;
+	TMenuItem *N2;
+	TMenuItem *N3;
+	TMenuItem *N4;
+	TMenuItem *N5;
+	TMenuItem *N6;
+	TMenuItem *N7;
+	TMenuItem *N8;
+	TMenuItem *N9;
+	TMenuItem *N10;
+	TMenuItem *N11;
+	TLabel *Label2;
+	TButton *Button2;
+	TButton *Button3;
+	TTimer *Timer1;
+	TPerformanceGraph *PerformanceGraph1;
+	TLabel *Label3;
+	TPanel *GraphPanel;
+	TGroupBox *GroupBox1;
+	TLabel *Label4;
+	TToggleSwitch *ToggleSwitch1;
+	TLabel *LCores;
+	TMemo *Memo2;
+	TLabel *LWin;
+	TLabel *LArch;
+	TLabel *LUserName;
+	TLabel *LRam;
+	TCGauge *CGaugeRAM;
+	TLabel *LAvailRam;
+	TLabel *PowerManager;
+	TLabel *L3Cache;
+	TLabel *L2Cache;
+	TLabel *LManufacturer;
+	TLabel *LWorkGroup;
+	TLabel *LProcessor;
+	TLabel *Label5;
+	TLabel *Label6;
+	TLabel *LHyperV;
+	TLabel *LVideoCard;
+	TLabel *LVideoMem;
+	TLabel *LVideoC2;
+	TLabel *LBaseB;
+	TLabel *LProd;
+	TLabel *LSerNum;
+	TLabel *LBver;
+	TLabel *LBios;
+	TLabel *LBiosver;
+	TLabel *LBiosdate;
+	TLabel *LMonitor;
+	TLabel *Label7;
+	TLabel *LBRunTime;
+	TLabel *LBstatus;
+	TLabel *LBvolt;
+	TCGauge *CGaugeBattery;
+	TLabel *LNetDesc;
+	TLabel *LNetMAC;
+	TLabel *LNetCap;
+	TLabel *LNetStatus;
+	TIdHTTP *IdHTTP1;
+	TLabel *LNetIP;
+	TImage *Image1;
+	TImage *Image4;
+	TImage *Image2;
+	TImage *Image3;
+	TImage *Image5;
+	TImage *Image6;
+	TLabel *Volt;
+	TImage *NetAdapter;
+	TGroupBox *GmenuDisk;
+	TMemo *InfoDiskMemo;
+	TLabel *Disk1;
+	TLabel *Disk3;
+	TLabel *Disk2;
+	TImage *ImgDisk1;
+	TImage *Image17;
+	TImage *Image18;
+	TImage *Image27;
+	TImage *Image28;
+	TImage *Image29;
+	TTrayIcon *TrayIcon1;
+	TPopupMenu *PopupMenu2;
+	TMenuItem *N12;
+	TMenuItem *N13;
+	TMenuItem *N14;
+	TButton *Button4;
+	TGroupBox *GroupBox2;
+	TLabel *Label8;
+	TPageControl *PageControl2;
+	TTabSheet *TabSheet1;
+	TTabSheet *TabSheet2;
+	TTabSheet *TabSheet3;
+	TImage *Image7;
+	TScrollBox *ScrollBox1;
+	TImage *Image8;
+
+
+	void __fastcall FormCreate(TObject *Sender);
+    void __fastcall cbxVclStylesChange(TObject *Sender);
+    void __fastcall grpDisplayModeClick(TObject *Sender);
+    void __fastcall grpCloseStyleClick(TObject *Sender);
+    void __fastcall grpPlacementClick(TObject *Sender);
+    void __fastcall chkUseAnimationClick(TObject *Sender);
+    void __fastcall trkAnimationDelayChange(TObject *Sender);
+    void __fastcall trkAnimationStepChange(TObject *Sender);
+    void __fastcall actHomeExecute(TObject *Sender);
+    void __fastcall actProcessExecute(TObject *Sender);
+    void __fastcall actAutoExecute(TObject *Sender);
+    void __fastcall SVClosed(TObject *Sender);
+    void __fastcall SVOpened(TObject *Sender);
+    void __fastcall SVOpening(TObject *Sender);
+    void __fastcall catMenuItemsCategoryCollapase(TObject *Sender, TButtonCategory * const Category);
+	void __fastcall actRegExecute(TObject *Sender);
+	void __fastcall actSettingsExecute(TObject *Sender);
+	void __fastcall ListView1SelectItem(TObject *Sender, TListItem *Item, bool Selected);
+	void __fastcall N1Click(TObject *Sender);
+	void __fastcall N2Click(TObject *Sender);
+	void __fastcall N4Click(TObject *Sender);
+	void __fastcall N5Click(TObject *Sender);
+	void __fastcall N6Click(TObject *Sender);
+	void __fastcall N7Click(TObject *Sender);
+	void __fastcall N8Click(TObject *Sender);
+	void __fastcall N9Click(TObject *Sender);
+	void __fastcall N10Click(TObject *Sender);
+	void __fastcall N11Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Timer1Timer(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall PerformanceGraph1ScaleChange(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall imgMenuClick(TObject *Sender);
+	void __fastcall ToggleSwitch1Click(TObject *Sender);
+	void __fastcall Memo2Change(TObject *Sender);
+	void __fastcall Button5Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall Image11Click(TObject *Sender);
+	void __fastcall Image14Click(TObject *Sender);
+	void __fastcall Image13Click(TObject *Sender);
+	void __fastcall Image16Click(TObject *Sender);
+	void __fastcall Image27MouseLeave(TObject *Sender);
+	void __fastcall Image27MouseEnter(TObject *Sender);
+	void __fastcall Image28MouseEnter(TObject *Sender);
+	void __fastcall Image28MouseLeave(TObject *Sender);
+	void __fastcall Image28Click(TObject *Sender);
+	void __fastcall Image27Click(TObject *Sender);
+	void __fastcall Image29Click(TObject *Sender);
+	void __fastcall Image29MouseEnter(TObject *Sender);
+	void __fastcall Image29MouseLeave(TObject *Sender);
+	void __fastcall SleepSBClick(TObject *Sender);
+	void __fastcall ShutdownSBClick(TObject *Sender);
+	void __fastcall RestartSBClick(TObject *Sender);
+	void __fastcall RebootSetClick(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
+	void __fastcall N12Click(TObject *Sender);
+	void __fastcall N13Click(TObject *Sender);
+	void __fastcall N14Click(TObject *Sender);
+
+
+
+
+
+private:	// User declarations
+
+
+public:		// User declarations
+
+	void InfoOfDisk(void);
+	void InfoPC();
+	void GetWmiInfo(TStrings *L, wchar_t* wsQuery);
+	BOOL ChekPrivilege(BOOL bEnablePrivilege);
+	BOOL SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);
+	void __fastcall GetAutoRun();
+	void __fastcall CloseProcessByPID();
+	void  __fastcall SetPriority(DWORD PRIORITY_CLASS);
+	void __fastcall ProcessList();
+	__fastcall TInnerWorld(TComponent* Owner);
+	void Log(UnicodeString Msg);
+
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TInnerWorld *InnerWorld;
+
+
+//---------------------------------------------------------------------------
+#endif
